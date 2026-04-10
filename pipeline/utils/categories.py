@@ -288,21 +288,48 @@ DESTINATION_ANCHORS = {
 # ──────────────────────────────────────────────────────────────
 
 QUALITY_SIGNAL_BRANDS = {
-    # DTC / experiential
+    # ── Internet-native / DTC with brick-and-mortar ──
     "warby parker", "allbirds", "glossier", "bonobos", "everlane",
     "casper", "away", "outdoor voices", "reformation", "vuori",
     "alo yoga", "fabletics", "rothy's", "rothys",
-    "kendra scott", "gorjana", "brilliant earth", "mejuri",
+    "buck mason", "marine layer", "faherty", "rhone",
+    "on running", "hoka", "tracksmith",
+    "brilliant earth", "mejuri", "gorjana", "kendra scott",
+    "untuckit", "suitsupply", "indochino",
+
+    # ── Major brands that signal premium retail areas ──
+    "apple store", "apple ",  # Apple retail
+    "tesla", "peloton", "dyson", "microsoft store", "samsung experience",
     "lululemon", "athleta", "free people", "anthropologie",
     "madewell", "aritzia", "bluemercury", "drybar",
-    # Premium fast casual
+    "nike ", "nike store", "adidas originals",
+    "patagonia", "rei ", "north face",
+    "uniqlo", "zara", "cos ",
+
+    # ── Premium food / coffee (location-selective) ──
+    "whole foods", "trader joe's", "trader joes", "central market",
     "sweetgreen", "cava", "shake shack", "north italia",
-    "flower child", "true food kitchen",
-    "blue bottle", "la colombe", "verve coffee", "philz coffee",
-    # Premium home
+    "flower child", "true food kitchen", "eataly",
+    "starbucks", "blue bottle", "la colombe", "verve coffee", "philz coffee",
+
+    # ── Premium home / lifestyle ──
     "pottery barn", "west elm", "restoration hardware", "rh ",
     "crate & barrel", "crate and barrel", "cb2", "williams sonoma",
-    "arhaus", "container store",
+    "arhaus", "container store", "sur la table",
+
+    # ── Premium beauty / wellness ──
+    "sephora", "ulta", "lush ", "kiehl's", "kiehls", "aesop",
+    "jo malone", "le labo", "bluemercury",
+
+    # ── Luxury (very strong signal) ──
+    "tiffany", "louis vuitton", "gucci", "hermes", "hermès",
+    "chanel", "prada", "burberry", "cartier", "rolex",
+    "david yurman", "tory burch", "kate spade",
+    "nordstrom", "neiman marcus", "saks fifth avenue",
+
+    # ── Premium fitness ──
+    "equinox", "soulcycle", "soul cycle", "barry's", "barrys",
+    "orangetheory", "orange theory", "lifetime fitness", "life time",
 }
 
 # ──────────────────────────────────────────────────────────────

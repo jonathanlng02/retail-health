@@ -83,7 +83,7 @@ def run():
             })
         # Sort: anchors first, then quality signals, then by count desc
         pois.sort(key=lambda p: (not p["an"], not p["q"], -p["cnt"], p["n"]))
-        poi_by_hex[hex_id] = pois[:30]
+        poi_by_hex[hex_id] = pois  # include all POIs
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -110,12 +110,10 @@ def run():
             "q": int(row.get("quality_count", 0)),
             "inf": int(row.get("infrastructure_count", 0)),
             "sb": {
-                "density": round(float(row.get("density_score", 0)), 3),
-                "diversity": round(float(row.get("diversity_score", 0)), 3),
-                "anchor": round(float(row.get("anchor_score", 0)), 3),
-                "mix": round(float(row.get("mix_score", 0)), 3),
-                "grocery": round(float(row.get("grocery_proximity", 0)), 3),
                 "quality": round(float(row.get("quality_score", 0)), 3),
+                "grocery": round(float(row.get("grocery_proximity", 0)), 3),
+                "mix": round(float(row.get("mix_score", 0)), 3),
+                "density": round(float(row.get("density_score", 0)), 3),
                 "infra_penalty": round(float(row.get("infra_penalty", 0)), 3),
             },
             "pois": poi_by_hex.get(hex_id, []),
