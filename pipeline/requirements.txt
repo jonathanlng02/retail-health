@@ -1,0 +1,9 @@
+duckdb>=1.0
+pandas>=2.0
+pyarrow>=14.0
+h3>=4.0
+scipy
+scikit-learn
+hdbscan>=0.8.33
+numpy
+overturemaps
