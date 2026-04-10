@@ -11,7 +11,7 @@ SUPER_CATEGORIES = [
 ]
 
 BRAND_ARCHETYPES = [
-    "dtc_experiential", "fast_casual_trendy", "value_bulk",
+    "experiential", "fast_casual_trendy", "value_bulk",
     "family_essentials", "nightlife_social", "fitness_wellness",
     "home_lifestyle",
 ]

@@ -253,6 +253,8 @@ CATEGORY_KEYWORD_FALLBACKS = {
 # These are what matter for retail health. NOT gas stations/ATMs.
 # ──────────────────────────────────────────────────────────────
 
+ANCHOR_EXACT = {"apple", "apple store", "rei", "amc"}
+
 DESTINATION_ANCHORS = {
     # Grocery anchors (very high signal - people need groceries)
     "whole foods", "trader joe's", "trader joes", "central market",
@@ -268,8 +270,7 @@ DESTINATION_ANCHORS = {
     "saks fifth avenue", "bloomingdale",
 
     # Specialty destination
-    "apple store", "apple ",
-    "tesla", "peloton",
+    "apple store", "tesla", "peloton",
     "sephora", "ulta",
     "total wine", "spec's",
 
@@ -287,6 +288,13 @@ DESTINATION_ANCHORS = {
 # Their presence indicates a curated, high-quality retail area
 # ──────────────────────────────────────────────────────────────
 
+# Short brand names that must match EXACTLY (lowercased) to avoid
+# false positives (e.g. "apple" matching "apple orthodontix").
+QUALITY_SIGNAL_EXACT = {
+    "apple", "apple store", "nike", "zara", "lush", "rei", "cos",
+    "rh", "cb2",
+}
+
 QUALITY_SIGNAL_BRANDS = {
     # ── Internet-native / DTC with brick-and-mortar ──
     "warby parker", "allbirds", "glossier", "bonobos", "everlane",
@@ -298,13 +306,13 @@ QUALITY_SIGNAL_BRANDS = {
     "untuckit", "suitsupply", "indochino",
 
     # ── Major brands that signal premium retail areas ──
-    "apple store", "apple ",  # Apple retail
+    "apple store",  # also matched via QUALITY_SIGNAL_EXACT
     "tesla", "peloton", "dyson", "microsoft store", "samsung experience",
     "lululemon", "athleta", "free people", "anthropologie",
     "madewell", "aritzia", "bluemercury", "drybar",
-    "nike ", "nike store", "adidas originals",
-    "patagonia", "rei ", "north face",
-    "uniqlo", "zara", "cos ",
+    "nike store", "adidas originals",
+    "patagonia", "north face",
+    "uniqlo",
 
     # ── Premium food / coffee (location-selective) ──
     "whole foods", "trader joe's", "trader joes", "central market",
@@ -313,13 +321,13 @@ QUALITY_SIGNAL_BRANDS = {
     "starbucks", "blue bottle", "la colombe", "verve coffee", "philz coffee",
 
     # ── Premium home / lifestyle ──
-    "pottery barn", "west elm", "restoration hardware", "rh ",
-    "crate & barrel", "crate and barrel", "cb2", "williams sonoma",
+    "pottery barn", "west elm", "restoration hardware",
+    "crate & barrel", "crate and barrel", "williams sonoma",
     "arhaus", "container store", "sur la table",
 
     # ── Premium beauty / wellness ──
-    "sephora", "ulta", "lush ", "kiehl's", "kiehls", "aesop",
-    "jo malone", "le labo", "bluemercury",
+    "sephora", "ulta", "kiehl's", "kiehls", "aesop",
+    "jo malone", "le labo",
 
     # ── Luxury (very strong signal) ──
     "tiffany", "louis vuitton", "gucci", "hermes", "hermès",
@@ -356,7 +364,33 @@ INFRASTRUCTURE_BRANDS = {
 }
 
 # Brand archetype lists (for cluster classification)
-DTC_EXPERIENTIAL_BRANDS = QUALITY_SIGNAL_BRANDS  # alias
+# NOTE: These are intentionally SMALLER than QUALITY_SIGNAL_BRANDS.
+# Quality signals are used for scoring (Starbucks presence = good signal).
+# Archetypes are used for clustering — only brands whose presence DEFINES
+# an area's character, not ubiquitous chains.
+
+EXPERIENTIAL_BRANDS = {
+    # True DTC / experiential retail — location-selective, defines the area
+    "warby parker", "allbirds", "glossier", "bonobos", "everlane",
+    "casper", "away", "outdoor voices", "reformation", "vuori",
+    "alo yoga", "fabletics", "rothy's", "rothys",
+    "buck mason", "marine layer", "faherty", "rhone",
+    "kendra scott", "gorjana", "brilliant earth", "mejuri",
+    "lululemon", "athleta", "free people", "anthropologie",
+    "madewell", "aritzia", "bluemercury", "drybar",
+    "untuckit", "suitsupply",
+    # Luxury
+    "tiffany", "louis vuitton", "gucci", "hermes", "hermès",
+    "chanel", "prada", "burberry", "cartier",
+    "david yurman", "tory burch", "kate spade",
+    "nordstrom", "neiman marcus", "saks fifth avenue",
+    # Premium home
+    "pottery barn", "west elm", "restoration hardware",
+    "crate & barrel", "crate and barrel", "williams sonoma",
+    "arhaus",
+}
+# Backward compat alias
+DTC_EXPERIENTIAL_BRANDS = EXPERIENTIAL_BRANDS
 
 FAST_CASUAL_TRENDY_BRANDS = {
     "chipotle", "sweetgreen", "cava", "shake shack", "wingstop",
@@ -428,6 +462,8 @@ def is_destination_anchor(name: str, brand_name: str = "") -> bool:
         if not text:
             continue
         text_lower = text.lower().strip()
+        if text_lower in ANCHOR_EXACT:
+            return True
         if any(a in text_lower for a in DESTINATION_ANCHORS):
             return True
     return False
@@ -439,6 +475,8 @@ def is_quality_signal(name: str, brand_name: str = "") -> bool:
         if not text:
             continue
         text_lower = text.lower().strip()
+        if text_lower in QUALITY_SIGNAL_EXACT:
+            return True
         if any(b in text_lower for b in QUALITY_SIGNAL_BRANDS):
             return True
     return False
@@ -462,8 +500,8 @@ def classify_brand_archetype(name: str, brand_name: str = "") -> str:
         if not text:
             continue
         text_lower = text.lower().strip()
-        if any(b in text_lower for b in DTC_EXPERIENTIAL_BRANDS):
-            return "dtc_experiential"
+        if any(b in text_lower for b in EXPERIENTIAL_BRANDS):
+            return "experiential"
         if any(b in text_lower for b in FAST_CASUAL_TRENDY_BRANDS):
             return "fast_casual_trendy"
         if any(b in text_lower for b in VALUE_BULK_BRANDS):

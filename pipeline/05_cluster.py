@@ -12,7 +12,7 @@ from utils.checkpoints import checkpoint_exists, load_checkpoint, save_checkpoin
 # Cluster types (ordered by classification priority)
 CLUSTER_TYPES = [
     "Entertainment Corridor",
-    "DTC & Experiential",
+    "Experiential",
     "Family-Oriented",
     "Value & Bulk",
     "Fitness & Wellness Hub",
@@ -37,7 +37,7 @@ def classify_cluster(members, df_global):
     grocery_pct = members["grocery_count"].sum() / total_pois
 
     # Aggregate brand archetype totals
-    ba_dtc = members["ba_dtc_experiential"].sum()
+    ba_exp = members["ba_experiential"].sum()
     ba_fc = members["ba_fast_casual_trendy"].sum()
     ba_value = members["ba_value_bulk"].sum()
     ba_family = members["ba_family_essentials"].sum()
@@ -45,7 +45,6 @@ def classify_cluster(members, df_global):
     ba_fitness = members["ba_fitness_wellness"].sum()
     ba_home = members["ba_home_lifestyle"].sum()
 
-    total_branded = ba_dtc + ba_fc + ba_value + ba_family + ba_nightlife + ba_fitness + ba_home
     has_family_anchor = members["family_anchor_count"].sum() > 0
 
     avg_entropy = members["shannon_entropy"].mean()
@@ -60,9 +59,9 @@ def classify_cluster(members, df_global):
     if (ba_nightlife >= 3 and food_pct > 0.35) or (food_pct > 0.40 and entertainment_pct > 0.12):
         return "Entertainment Corridor"
 
-    # DTC & Experiential: presence of DTC/experiential brands + fast casual trendy
-    if ba_dtc >= 2 or (ba_dtc >= 1 and ba_fc >= 2 and shopping_pct > 0.15):
-        return "DTC & Experiential"
+    # Experiential: presence of experiential/luxury brands + shopping
+    if ba_exp >= 3 or (ba_exp >= 2 and shopping_pct > 0.20):
+        return "Experiential"
 
     # Family-Oriented: family essentials brands + grocery presence
     if (ba_family >= 3 or (ba_family >= 1 and grocery_pct > 0.05 and has_family_anchor)):
@@ -93,7 +92,7 @@ def classify_cluster(members, df_global):
     if food_pct > 0.35:
         return "Entertainment Corridor"
     if shopping_pct > 0.25 and avg_entropy > entropy_median:
-        return "DTC & Experiential"
+        return "Experiential"
     if ba_family >= 1 or grocery_pct > 0.05:
         return "Family-Oriented"
 

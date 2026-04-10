@@ -19,7 +19,7 @@ def _to_list(val):
 
 CLUSTER_TYPE_SHORT = {
     "Entertainment Corridor": "entertainment",
-    "DTC & Experiential": "dtc_experiential",
+    "Experiential": "experiential",
     "Family-Oriented": "family",
     "Value & Bulk": "value_bulk",
     "Fitness & Wellness Hub": "fitness_wellness",
